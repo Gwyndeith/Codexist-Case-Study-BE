@@ -25,7 +25,6 @@ public class MapService {
         ArrayList<MapPoint> nearbyLocations = new ArrayList<>();
 
         Map<String, Object> dbDataMap = mongoDBAtlasController.getSearchedCoordinateFromDB(mapPoint.getLatitude(), mapPoint.getLongitude(), radius);
-        System.out.println("dbData: " + dbDataMap);
         if (dbDataMap.get("document") != null) {
             Map<String, Object> nearbyLocationResponseEntity = new LinkedHashMap<>();
             for (String key : dbDataMap.keySet()) {
@@ -40,13 +39,11 @@ public class MapService {
                 nearbyLocations.add(new MapPoint(location.get("name").toString(), Double.parseDouble(location.get("latitude").toString()), Double.parseDouble(location.get("longitude").toString())));
             }
 
-            System.out.println("Search related nearby location list: " + nearbyLocations);
             return nearbyLocations;
         } else {
             Map<String, Object> newSearchCoordinateMap = mongoDBAtlasController.createNewSearchCoordinate(mapPoint, radius);
             Map<String, Object> map = googlePlacesAPIController.searchNearbyPlaces(Double.toString(mapPoint.getLatitude()), Double.toString(mapPoint.getLongitude()), Double.toString(radius));
 
-//        System.out.println("Map: " + map.get("places"));
             ArrayList placesArray = (ArrayList) map.get("places");
 
             if (!placesArray.isEmpty()) {
@@ -56,7 +53,6 @@ public class MapService {
                     LinkedHashMap locationName = (LinkedHashMap) place.get("displayName");
 
                     nearbyLocations.add(new MapPoint(locationName.get("text").toString(), Double.parseDouble(location.get("latitude").toString()), Double.parseDouble(location.get("longitude").toString())));
-//            System.out.println("Nearby location details:\n\tname: " + locationName.get("text") + "\n\tlatitude:" + location.get("latitude") + "\n\tlongitude:" + location.get("longitude"));
                 }
                 mongoDBAtlasController.addNearbyLocationToDB(nearbyLocations, String.valueOf(newSearchCoordinateMap.get("insertedId")));
                 return nearbyLocations;

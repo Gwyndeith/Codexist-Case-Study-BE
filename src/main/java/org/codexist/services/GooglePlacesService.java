@@ -20,8 +20,6 @@ public class GooglePlacesService {
     public ResponseEntity<String> searchNearbyPlaces(String latitude, String longitude, String radius) {
         String url = UriComponentsBuilder.fromHttpUrl("https://places.googleapis.com/v1/places:searchNearby").toUriString();
 
-//        System.out.println("Sending to google services:\n" + latitude + ", " + longitude + ", " + radius);
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("X-Goog-Api-Key", apiKey);

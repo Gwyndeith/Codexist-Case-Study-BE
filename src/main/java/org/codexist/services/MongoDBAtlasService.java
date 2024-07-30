@@ -107,8 +107,6 @@ public class MongoDBAtlasService {
                     .append(searchId)
                     .append("\"},");
         }
-
-        System.out.println("insert many body documents: " + stringBuilder);
         String requestBody = "{"
                 + "\"dataSource\":\"CodexistCluster\","
                 + "\"database\":\"searched_map_points\","
