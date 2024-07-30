@@ -1,11 +1,11 @@
 package org.codexist.services;
 
 
+import org.codexist.controllers.GooglePlacesAPIController;
+import org.codexist.controllers.MongoDBAtlasController;
 import org.codexist.models.MapPoint;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,55 +16,49 @@ import java.util.Map;
 @Service
 public class MapService {
 
-    RestTemplate restTemplate = new RestTemplate();
-    GooglePlacesService googlePlacesService = new GooglePlacesService(restTemplate);
-    MongoDBAtlasService mongoDBAtlasService = new MongoDBAtlasService(restTemplate);
+    private final JsonParser jsonParser = JsonParserFactory.getJsonParser();
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final MongoDBAtlasController mongoDBAtlasController = new MongoDBAtlasController(jsonParser, restTemplate);
+    private final GooglePlacesAPIController googlePlacesAPIController = new GooglePlacesAPIController(jsonParser, restTemplate);
 
     public ArrayList<MapPoint> findNearbyLocations(MapPoint mapPoint, double radius) {
         ArrayList<MapPoint> nearbyLocations = new ArrayList<>();
-        JsonParser jsonParser = JsonParserFactory.getJsonParser();
 
-        ResponseEntity<String> databaseResponseEntity = mongoDBAtlasService.getSearchedCoordinateFromDB(mapPoint.getLatitude(), mapPoint.getLongitude(), radius);
-        Map<String, Object> dbDataMap = jsonParser.parseMap(databaseResponseEntity.getBody());
+        Map<String, Object> dbDataMap = mongoDBAtlasController.getSearchedCoordinateFromDB(mapPoint.getLatitude(), mapPoint.getLongitude(), radius);
         System.out.println("dbData: " + dbDataMap);
         if (dbDataMap.get("document") != null) {
-            ResponseEntity<String> dbNearbyLocationsResponseEntity = new ResponseEntity<>(HttpStatusCode.valueOf(200));
+            Map<String, Object> nearbyLocationResponseEntity = new LinkedHashMap<>();
             for (String key : dbDataMap.keySet()) {
                 Map<String, Object> dbNearbyLocationsMap = (Map<String, Object>) dbDataMap.get(key);
-                dbNearbyLocationsResponseEntity = mongoDBAtlasService.getMapPointRelatedNearbyLocations(String.valueOf(dbNearbyLocationsMap.get("_id")));
+                nearbyLocationResponseEntity = mongoDBAtlasController.getMapPointRelatedNearbyLocations(String.valueOf(dbNearbyLocationsMap.get("_id")));
             }
 
-            System.out.println(dbNearbyLocationsResponseEntity.getBody());
-            Map<String, Object> nearbyLocationResponseEntity = jsonParser.parseMap(dbNearbyLocationsResponseEntity.getBody());
             ArrayList nearbyLocationList = (ArrayList) nearbyLocationResponseEntity.get("documents");
 
-            for (int i = 0; i < nearbyLocationList.size(); i++) {
-                LinkedHashMap location = (LinkedHashMap) nearbyLocationList.get(i);
+            for (Object locationObj : nearbyLocationList) {
+                LinkedHashMap location = (LinkedHashMap) locationObj;
                 nearbyLocations.add(new MapPoint(location.get("name").toString(), Double.parseDouble(location.get("latitude").toString()), Double.parseDouble(location.get("longitude").toString())));
             }
 
-            System.out.println("Search related nearby location list: " + nearbyLocationList);
-            return nearbyLocationList;
+            System.out.println("Search related nearby location list: " + nearbyLocations);
+            return nearbyLocations;
         } else {
-            ResponseEntity<String> createSearchCoordinateResponseEntity = mongoDBAtlasService.createNewSearchCoordinate(mapPoint, radius);
-            Map<String, Object> newSearchCoordinateMap = jsonParser.parseMap(createSearchCoordinateResponseEntity.getBody());
-
-            ResponseEntity<String> responseEntity = googlePlacesService.searchNearbyPlaces(Double.toString(mapPoint.getLatitude()), Double.toString(mapPoint.getLongitude()), Double.toString(radius));
-            Map<String, Object> map = jsonParser.parseMap(responseEntity.getBody());
+            Map<String, Object> newSearchCoordinateMap = mongoDBAtlasController.createNewSearchCoordinate(mapPoint, radius);
+            Map<String, Object> map = googlePlacesAPIController.searchNearbyPlaces(Double.toString(mapPoint.getLatitude()), Double.toString(mapPoint.getLongitude()), Double.toString(radius));
 
 //        System.out.println("Map: " + map.get("places"));
             ArrayList placesArray = (ArrayList) map.get("places");
 
-            if (placesArray.size() > 0) {
-                for (int i = 0; i < placesArray.size(); i++) {
-                    LinkedHashMap place = (LinkedHashMap) placesArray.get(i);
+            if (!placesArray.isEmpty()) {
+                for (Object placeObj : placesArray) {
+                    LinkedHashMap place = (LinkedHashMap) placeObj;
                     LinkedHashMap location = (LinkedHashMap) place.get("location");
                     LinkedHashMap locationName = (LinkedHashMap) place.get("displayName");
 
                     nearbyLocations.add(new MapPoint(locationName.get("text").toString(), Double.parseDouble(location.get("latitude").toString()), Double.parseDouble(location.get("longitude").toString())));
 //            System.out.println("Nearby location details:\n\tname: " + locationName.get("text") + "\n\tlatitude:" + location.get("latitude") + "\n\tlongitude:" + location.get("longitude"));
                 }
-                mongoDBAtlasService.addNearbyLocationToDB(nearbyLocations, String.valueOf(newSearchCoordinateMap.get("insertedId")));
+                mongoDBAtlasController.addNearbyLocationToDB(nearbyLocations, String.valueOf(newSearchCoordinateMap.get("insertedId")));
                 return nearbyLocations;
             } else {
                 return new ArrayList<>();
