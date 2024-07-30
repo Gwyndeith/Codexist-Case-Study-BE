@@ -24,10 +24,10 @@ public class MapController {
 
     @GetMapping("/findNearbyLocations/")
     public ArrayList<MapPoint> findNearbyLocations(@RequestParam double latitude, @RequestParam double longitude, @RequestParam double radius) {
-        System.out.println(latitude + " " + longitude + " " + radius);
+//        System.out.println(latitude + " " + longitude + " " + radius);
         MapPoint requestMapPoint = new MapPoint(latitude, longitude);
         ArrayList<MapPoint> neighbors = mapService.findNearbyLocations(requestMapPoint, radius);
-        System.out.println(neighbors);
+        System.out.println("MapController response from MapService for nearby locations:\n" + neighbors);
         return neighbors;
     }
 }
