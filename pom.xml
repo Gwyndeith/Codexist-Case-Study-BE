@@ -54,6 +54,11 @@
             <artifactId>google-places-api</artifactId>
             <version>0.1.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>5.1.2</version>
+        </dependency>
     </dependencies>
 
     <build>
