@@ -118,4 +118,22 @@ public class MongoDBAtlasService {
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
         restTemplate.postForEntity(url, entity, String.class);
     }
+
+    public ResponseEntity<String> getSearchHistory() {
+        String url = UriComponentsBuilder.fromHttpUrl("https://eu-central-1.aws.data.mongodb-api.com/app/data-afgjmpq/endpoint/data/v1/action/find").toUriString();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("api-key", apiKey);
+
+        String requestBody = "{"
+                + "\"dataSource\":\"CodexistCluster\","
+                + "\"database\":\"searched_map_points\","
+                + "\"collection\":\"searchedCoordinates\","
+                + "\"filter\":{"
+                + "}"
+                + "}";
+        HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+        return restTemplate.postForEntity(url, entity, String.class);
+    }
 }

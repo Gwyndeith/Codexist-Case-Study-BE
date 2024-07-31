@@ -24,6 +24,11 @@ public class MongoDBAtlasController {
         return parseData(databaseResponseEntity.getBody());
     }
 
+    public Map<String, Object> getSearchHistory() {
+        ResponseEntity<String> databaseResponseEntity = mongoDBAtlasService.getSearchHistory();
+        return parseData(databaseResponseEntity.getBody());
+    }
+
     public Map<String, Object> getMapPointRelatedNearbyLocations(String searchId) {
         ResponseEntity<String> databaseResponseEntity = mongoDBAtlasService.getMapPointRelatedNearbyLocations(searchId);
         return parseData(databaseResponseEntity.getBody());

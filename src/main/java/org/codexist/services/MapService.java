@@ -4,6 +4,7 @@ package org.codexist.services;
 import org.codexist.controllers.GooglePlacesAPIController;
 import org.codexist.controllers.MongoDBAtlasController;
 import org.codexist.models.MapPoint;
+import org.codexist.models.SearchItem;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.stereotype.Service;
@@ -60,5 +61,23 @@ public class MapService {
                 return new ArrayList<>();
             }
         }
+    }
+
+    public ArrayList<SearchItem> getSearchHistory() {
+        ArrayList<SearchItem> searchHistory = new ArrayList<>();
+        Map<String, Object> searchHistoryMap = mongoDBAtlasController.getSearchHistory();
+
+        ArrayList placesArray = (ArrayList) searchHistoryMap.get("documents");
+        if (!placesArray.isEmpty()) {
+            for (Object searchObj : placesArray) {
+                LinkedHashMap searchLoc = (LinkedHashMap) searchObj;
+                double latitude = Double.parseDouble(String.valueOf(searchLoc.get("latitude")));
+                double longitude = Double.parseDouble(String.valueOf(searchLoc.get("longitude")));
+                double radius = Double.parseDouble(String.valueOf(searchLoc.get("radius")));
+                searchHistory.add(new SearchItem(latitude, longitude, radius));
+            }
+        }
+
+        return searchHistory;
     }
 }
