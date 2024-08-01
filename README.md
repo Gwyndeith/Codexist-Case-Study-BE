@@ -31,7 +31,7 @@ The Spring Boot app uses the following variables under the "application.properti
 - spring.application.name=codexist-case-study
 - server.port=8070
 - server.address=localhost
-- spring.data.mongodb.uri=mongodb+srv://odorkundogan:159951@codexistcluster.vytryxq.mongodb.net/?retryWrites=true&w=majority&appName=CodexistCluster
+- spring.data.mongodb.uri=*****PLEASE ASK FOR THE URI SINCE IT INCLUDES CREDENTIALS*****
 - spring.data.mongodb.database=searched_map_points
 
 # Deployment
