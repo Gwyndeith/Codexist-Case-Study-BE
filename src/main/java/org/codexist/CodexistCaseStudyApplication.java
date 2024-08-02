@@ -1,12 +1,9 @@
-package org.codexist.codexistcasestudy;
+package org.codexist;
 
-import org.codexist.restcontrollers.MapController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication
-@ComponentScan(basePackageClasses = MapController.class)
+@SpringBootApplication(scanBasePackages = "org.codexist")
 public class CodexistCaseStudyApplication {
 
     public static void main(String[] args) {

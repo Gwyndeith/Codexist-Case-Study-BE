@@ -1,6 +1,7 @@
 package org.codexist.services;
 
 import org.codexist.models.MapPoint;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,20 +15,16 @@ import java.util.List;
 @Service
 public class MongoDBAtlasService {
 
-    private final String apiKey = "wpxogQxcIc5XGSjjkh8GL9Wh9gNXHsZm1SQMxJxB3uDF5FbOQW6mAENWB4mPInON";
-
-    private final RestTemplate restTemplate;
-
-    public MongoDBAtlasService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
+    @Value("${mongoatlas.apiKey}")
+    private String apiKey;
+    private final RestTemplate restTemplate = new RestTemplate();
 
     public ResponseEntity<String> getSearchedCoordinateFromDB(double latitude, double longitude, double radius) {
         String url = UriComponentsBuilder.fromHttpUrl("https://eu-central-1.aws.data.mongodb-api.com/app/data-afgjmpq/endpoint/data/v1/action/findOne").toUriString();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("api-key", apiKey);
+        headers.add("api-key", this.apiKey);
         headers.add("Accept", "application/json");
 
         String requestBody = "{"
@@ -49,7 +46,7 @@ public class MongoDBAtlasService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("api-key", apiKey);
+        headers.add("api-key", this.apiKey);
         headers.add("Accept", "application/json");
 
         String requestBody = "{"
@@ -69,7 +66,7 @@ public class MongoDBAtlasService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("api-key", apiKey);
+        headers.add("api-key", this.apiKey);
 
         String requestBody = "{"
                 + "\"dataSource\":\"CodexistCluster\","
@@ -90,7 +87,7 @@ public class MongoDBAtlasService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("api-key", apiKey);
+        headers.add("api-key", this.apiKey);
         StringBuilder stringBuilder = new StringBuilder();
 
         for (MapPoint nearbyLocation : nearbyLocations) {
@@ -124,7 +121,7 @@ public class MongoDBAtlasService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("api-key", apiKey);
+        headers.add("api-key", this.apiKey);
 
         String requestBody = "{"
                 + "\"dataSource\":\"CodexistCluster\","

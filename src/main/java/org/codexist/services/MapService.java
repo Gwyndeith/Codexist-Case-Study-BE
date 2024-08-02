@@ -5,10 +5,8 @@ import org.codexist.controllers.GooglePlacesAPIController;
 import org.codexist.controllers.MongoDBAtlasController;
 import org.codexist.models.MapPoint;
 import org.codexist.models.SearchItem;
-import org.springframework.boot.json.JsonParser;
-import org.springframework.boot.json.JsonParserFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -17,10 +15,10 @@ import java.util.Map;
 @Service
 public class MapService {
 
-    private final JsonParser jsonParser = JsonParserFactory.getJsonParser();
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final MongoDBAtlasController mongoDBAtlasController = new MongoDBAtlasController(jsonParser, restTemplate);
-    private final GooglePlacesAPIController googlePlacesAPIController = new GooglePlacesAPIController(jsonParser, restTemplate);
+    @Autowired
+    private MongoDBAtlasController mongoDBAtlasController;
+    @Autowired
+    private GooglePlacesAPIController googlePlacesAPIController;
 
     public ArrayList<MapPoint> findNearbyLocations(MapPoint mapPoint, double radius) {
         ArrayList<MapPoint> nearbyLocations = new ArrayList<>();
