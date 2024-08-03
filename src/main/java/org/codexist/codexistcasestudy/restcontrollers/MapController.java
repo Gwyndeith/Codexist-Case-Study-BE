@@ -1,8 +1,8 @@
-package org.codexist.restcontrollers;
+package org.codexist.codexistcasestudy.restcontrollers;
 
-import org.codexist.models.SearchItem;
-import org.codexist.services.MapService;
-import org.codexist.models.MapPoint;
+import org.codexist.codexistcasestudy.models.SearchItem;
+import org.codexist.codexistcasestudy.services.MapService;
+import org.codexist.codexistcasestudy.models.MapPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

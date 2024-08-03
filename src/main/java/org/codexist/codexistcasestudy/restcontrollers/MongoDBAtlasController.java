@@ -1,7 +1,7 @@
-package org.codexist.controllers;
+package org.codexist.codexistcasestudy.restcontrollers;
 
-import org.codexist.models.MapPoint;
-import org.codexist.services.MongoDBAtlasService;
+import org.codexist.codexistcasestudy.services.MongoDBAtlasService;
+import org.codexist.codexistcasestudy.models.MapPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;

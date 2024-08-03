@@ -1,10 +1,10 @@
-package org.codexist.services;
+package org.codexist.codexistcasestudy.services;
 
 
-import org.codexist.controllers.GooglePlacesAPIController;
-import org.codexist.controllers.MongoDBAtlasController;
-import org.codexist.models.MapPoint;
-import org.codexist.models.SearchItem;
+import org.codexist.codexistcasestudy.restcontrollers.GooglePlacesAPIController;
+import org.codexist.codexistcasestudy.restcontrollers.MongoDBAtlasController;
+import org.codexist.codexistcasestudy.models.MapPoint;
+import org.codexist.codexistcasestudy.models.SearchItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

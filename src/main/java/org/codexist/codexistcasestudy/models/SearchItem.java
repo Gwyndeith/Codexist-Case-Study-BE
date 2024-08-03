@@ -1,8 +1,8 @@
-package org.codexist.models;
+package org.codexist.codexistcasestudy.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
-import org.codexist.interfaces.Coordinate;
+import org.codexist.codexistcasestudy.interfaces.Coordinate;
 
 @Getter
 public class SearchItem implements Coordinate {

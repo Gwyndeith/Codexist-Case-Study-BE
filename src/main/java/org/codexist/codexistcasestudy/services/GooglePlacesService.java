@@ -1,4 +1,4 @@
-package org.codexist.services;
+package org.codexist.codexistcasestudy.services;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;

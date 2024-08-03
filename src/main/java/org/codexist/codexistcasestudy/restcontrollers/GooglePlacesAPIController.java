@@ -1,6 +1,6 @@
-package org.codexist.controllers;
+package org.codexist.codexistcasestudy.restcontrollers;
 
-import org.codexist.services.GooglePlacesService;
+import org.codexist.codexistcasestudy.services.GooglePlacesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
